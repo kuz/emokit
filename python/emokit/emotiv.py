@@ -506,14 +506,13 @@ class Emotiv(object):
         _os_decryption = False
         # Change these values to the hex equivalent from the output of hid_enumerate. If they are incorrect.
         # Current values = VendorID: 8609 ProductID: 1
-        hidraw = hid.device(0x21a1, 0x0001)
-        if not hidraw:
-            hidraw = hid.device(0x21a1, 0x1234)
-        if not hidraw:
-            hidraw = hid.device(0xed02, 0x1234)
-        if not hidraw:
-            print "Device not found. Uncomment the code in setup_darwin and modify hid.device(vendor_id, product_id)"
-            raise ValueError
+        # You can see yours by opening /Applications/Utilities/System Information and navigating to
+        # Hardware -> USB -> Receiver Dongle L01
+        try:
+            hidraw = hid.device(0x21a1, 0x0001)
+        except IOError:
+            print "You need to specify correct ProductID and VendorID in setup_darwin()"
+            exit()
         if self.serial_number == "":
             print "Serial number needs to be specified manually in __init__()."
             raise ValueError
